@@ -38,8 +38,12 @@ document.getElementById("calculateButton").addEventListener("click", function() 
 
     const yearsToTarget = results.findIndex(result => result.monthlyDividend >= targetMonthlyDividend) + 1;
 
-    if (yearsToTarget > 0) {
+    // 목표 월 배당금에 도달하지 못할 경우를 처리
+    if (yearsToTarget === 0) {
+        resultHTML += `<div class="motivation">목표 월 배당금을 달성하기 위해서는 총 ${results.length}년 이상이 걸립니다.<br>경제적 자유를 위해 화이팅하세요!</div>`;
+    } else {
         results = results.slice(0, yearsToTarget); // 결과를 목표 달성 연도까지만 저장
+        resultHTML += `<div class="motivation">목표 월 배당금을 달성하기 위해서는 총 ${yearsToTarget}년이 걸립니다.<br>경제적 자유를 위해 화이팅하세요!</div>`;
     }
 
     let resultHTML = "<h2>계산 결과</h2>";
@@ -55,10 +59,6 @@ document.getElementById("calculateButton").addEventListener("click", function() 
         </tr>`;
     });
     resultHTML += "</table>";
-
-    if (yearsToTarget > 0) {
-        resultHTML += `<div class="motivation">목표 월 배당금을 달성하기 위해서는 총 ${yearsToTarget}년이 걸립니다.<br>경제적 자유를 위해 화이팅하세요!</div>`;
-    }
 
     document.getElementById("results").innerHTML = resultHTML;
 });
