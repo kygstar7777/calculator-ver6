@@ -38,6 +38,9 @@ document.getElementById("calculateButton").addEventListener("click", function() 
 
     const yearsToTarget = results.findIndex(result => result.monthlyDividend >= targetMonthlyDividend) + 1;
 
+    // 결과를 초기화
+    let resultHTML = "<h2>계산 결과</h2>";
+
     // 목표 월 배당금에 도달하지 못할 경우를 처리
     if (yearsToTarget === 0) {
         resultHTML += `<div class="motivation">목표를 달성하기 위해서는 총 ${results.length}년 이상이 걸립니다.<br>경제적 자유를 위해 화이팅하세요!</div>`;
@@ -46,7 +49,6 @@ document.getElementById("calculateButton").addEventListener("click", function() 
         resultHTML += `<div class="motivation">목표를 달성하기 위해서는 총 ${yearsToTarget}년이 걸립니다.<br>경제적 자유를 위해 화이팅하세요!</div>`;
     }
 
-    let resultHTML = "<h2>계산 결과</h2>";
     resultHTML += "<table border='1'><tr><th>연도</th><th>연 배당금 (만원)</th><th>월 배당금 (만원)</th><th>총 자산 (만원)</th><th>누적 투자 원금 (만원)</th><th>누적 투자 배당금 (만원)</th></tr>";
     results.forEach(result => {
         resultHTML += `<tr>
