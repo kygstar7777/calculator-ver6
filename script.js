@@ -1,7 +1,3 @@
-function formatNumber(num) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
 document.getElementById("calculateButton").addEventListener("click", function() {
     const initialInvestment = parseFloat(document.getElementById("initialInvestment").value) * 10000;
     const dividendRate = parseFloat(document.getElementById("dividendRate").value) / 100;
@@ -60,5 +56,13 @@ document.getElementById("calculateButton").addEventListener("click", function() 
     });
     resultHTML += "</table>";
 
+    if (yearsToTarget > 0) {
+        resultHTML += `<div class="motivation">목표 월 배당금을 달성하기 위해서는 총 ${yearsToTarget}년이 걸립니다.<br>경제적 자유를 위해 화이팅하세요!</div>`;
+    }
+
     document.getElementById("results").innerHTML = resultHTML;
 });
+
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
