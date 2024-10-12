@@ -17,7 +17,7 @@ document.getElementById("calculateButton").addEventListener("click", function() 
 
     for (let year = 1; year <= 30; year++) {
         const currentMonthlyInvestment = year === 1 ? monthlyInvestment : monthlyInvestment * Math.pow(1 + monthlyInvestmentGrowthRate, year - 1);
-        const annualInvestment = totalInvestment + currentMonthlyInvestment * 12;
+        const annualInvestment = totalInvestment + currentMonthlyInvestment * 12 + annualDividend;
         const annualDividend = (annualInvestment * dividendRate) * reinvestmentRate * (1 - taxRate) * (1 - inflationRate);
         const adjustedDividend = annualDividend * Math.pow(1 + dividendGrowthRate, year - 1);
 
