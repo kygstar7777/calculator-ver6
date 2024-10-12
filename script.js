@@ -11,45 +11,47 @@ document.getElementById("calculateButton").addEventListener("click", function() 
     const targetMonthlyDividend = parseFloat(document.getElementById("targetMonthlyDividend").value) * 10000;
 
     let results = [];
-    let totalInvestment = initialInvestment; // 초기 투자금 (첫해 연 투자금)
+    let totalInvestment = initialInvestment;
     let accumulatedDividends = 0;
-    let totalAssets = initialInvestment; // 초기 자산은 초기 투자금
+    let totalAssets = initialInvestment;
 
     for (let year = 1; year <= 100; year++) {
         // 월 투자금 계산
         let currentMonthlyInvestment = monthlyInvestment;
         if (year > 1) {
-            currentMonthlyInvestment *= Math.pow(1 + monthlyInvestmentGrowthRate, year - 1); // 월 투자금 증가율 반영
+            currentMonthlyInvestment *= Math.pow(1 + monthlyInvestmentGrowthRate, year - 1);
         }
 
         // 연 투자금 계산
         let annualInvestment = totalInvestment + currentMonthlyInvestment * 12;
         if (year > 1) {
-            annualInvestment += accumulatedDividends; // 이전 연도의 배당금 포함
+            annualInvestment += accumulatedDividends;
         }
 
         // 연 배당금 계산
-        const annualDividend = (annualInvestment * dividendRate) * reinvestmentRate * (1 - taxRate) * (1 - inflationRate);
-        
-        // 총 자산 계산
-        totalAssets = (totalAssets + annualDividend) * (1 + stockGrowthRate);
+        const annualDividend = annualInvestment * dividendRate * reinvestmentRate * (1 - taxRate);
 
-        // 배당 성장률 반영 (첫 해 제외)
-        const adjustedDividend = annualDividend * Math.pow(1 + dividendGrowthRate, year - 1);
-        
+        // 총 자산 계산 (주가 상승률 반영)
+        totalAssets = (totalAssets + annualDividend) * (1 + stockGrowthRate) * (1 - inflationRate);
+
+        // 누적 배당금 업데이트
+        accumulatedDividends += annualDividend;
+
+        // 월 배당금 계산 (인플레이션 반영)
+        const monthlyDividend = (annualDividend / 12) * (1 - inflationRate);
+
         // 결과 저장
         results.push({
             year: year,
-            annualDividend: adjustedDividend,
-            monthlyDividend: adjustedDividend / 12,
+            annualDividend: annualDividend,
+            monthlyDividend: monthlyDividend,
             totalAssets: totalAssets,
             totalInvestment: totalInvestment + currentMonthlyInvestment * 12,
-            accumulatedDividends: accumulatedDividends + adjustedDividend // 누적 배당금
+            accumulatedDividends: accumulatedDividends
         });
 
-        // 투자금 업데이트
+        // 누적 투자 원금 업데이트
         totalInvestment += currentMonthlyInvestment * 12;
-        accumulatedDividends += adjustedDividend; // 배당금 누적
     }
 
     // 목표 월 배당금 달성 연도 계산
@@ -62,12 +64,12 @@ document.getElementById("calculateButton").addEventListener("click", function() 
     if (yearsToTarget === 0) {
         resultHTML += `<div class="motivation">목표를 달성하기 위해서는 총 ${results.length}년 이상이 걸립니다.<br>경제적 자유를 위해 화이팅하세요!</div>`;
     } else {
-        results = results.slice(0, yearsToTarget); // 결과를 목표 달성 연도까지만 저장
+        results = results.slice(0, yearsToTarget); // 목표 달성 연도까지만 결과를 저장
         resultHTML += `<div class="motivation">목표를 달성하기 위해서는 총 ${yearsToTarget}년이 걸립니다.<br>경제적 자유를 위해 화이팅하세요!</div>`;
     }
 
     // 결과 표 생성
-    resultHTML += "<table border='1'><tr><th>연도</th><th>연 배당금 (만원)</th><th>월 배당금 (만원)</th><th>총 자산 (만원)</th><th>누적 투자 원금 (만원)</th><th>누적 투자 배당금 (만원)</th></tr>";
+    resultHTML += "<table border='1'><tr><th>연도</th><th>연 배당금 (만원)</th><th>월 배당금 (만원)</th><th>총 자산 (만원)</th><th>누적 투자 원금 (만원)</th><th>누적 배당금 (만원)</th></tr>";
     results.forEach(result => {
         resultHTML += `<tr>
             <td>${result.year}</td>
