@@ -11,30 +11,31 @@ document.getElementById("calculateButton").addEventListener("click", function() 
     const targetMonthlyDividend = parseFloat(document.getElementById("targetMonthlyDividend").value) * 10000;
 
     let results = [];
-    let totalInvestment = initialInvestment;  // 첫해 투자금
-    let totalDividends = 0;
+    let totalInvestment = initialInvestment; // 초기 투자금 (첫해 연 투자금)
     let accumulatedDividends = 0;
+    let totalAssets = initialInvestment; // 초기 자산은 초기 투자금
 
     for (let year = 1; year <= 100; year++) {
         // 월 투자금 계산
-        const currentMonthlyInvestment = year === 1 ? monthlyInvestment : monthlyInvestment * Math.pow(1 + monthlyInvestmentGrowthRate, year - 1);
-        
+        let currentMonthlyInvestment = monthlyInvestment;
+        if (year > 1) {
+            currentMonthlyInvestment *= Math.pow(1 + monthlyInvestmentGrowthRate, year - 1); // 월 투자금 증가율 반영
+        }
+
         // 연 투자금 계산
-        let annualInvestment;
-        if (year === 1) {
-            annualInvestment = totalInvestment + currentMonthlyInvestment * 12; // 첫해 연 투자금
-        } else {
-            annualInvestment = totalInvestment + currentMonthlyInvestment * 12 + accumulatedDividends; // 둘째 해 이후 연 투자금은 배당금 포함
+        let annualInvestment = totalInvestment + currentMonthlyInvestment * 12;
+        if (year > 1) {
+            annualInvestment += accumulatedDividends; // 이전 연도의 배당금 포함
         }
 
         // 연 배당금 계산
         const annualDividend = (annualInvestment * dividendRate) * reinvestmentRate * (1 - taxRate) * (1 - inflationRate);
         
-        // 배당 성장률 반영
-        const adjustedDividend = annualDividend * Math.pow(1 + dividendGrowthRate, year - 1);
-        
         // 총 자산 계산
-        const totalAssets = (annualInvestment + adjustedDividend) * (1 + stockGrowthRate);
+        totalAssets = (totalAssets + annualDividend) * (1 + stockGrowthRate);
+
+        // 배당 성장률 반영 (첫 해 제외)
+        const adjustedDividend = annualDividend * Math.pow(1 + dividendGrowthRate, year - 1);
         
         // 결과 저장
         results.push({
@@ -43,7 +44,7 @@ document.getElementById("calculateButton").addEventListener("click", function() 
             monthlyDividend: adjustedDividend / 12,
             totalAssets: totalAssets,
             totalInvestment: totalInvestment + currentMonthlyInvestment * 12,
-            totalDividends: accumulatedDividends + adjustedDividend
+            accumulatedDividends: accumulatedDividends + adjustedDividend // 누적 배당금
         });
 
         // 투자금 업데이트
@@ -74,7 +75,7 @@ document.getElementById("calculateButton").addEventListener("click", function() 
             <td>${formatNumber(Math.round(result.monthlyDividend / 10000))}</td>
             <td>${formatNumber(Math.round(result.totalAssets / 10000))}</td>
             <td>${formatNumber(Math.round(result.totalInvestment / 10000))}</td>
-            <td>${formatNumber(Math.round(result.totalDividends / 10000))}</td>
+            <td>${formatNumber(Math.round(result.accumulatedDividends / 10000))}</td>
         </tr>`;
     });
     resultHTML += "</table>";
