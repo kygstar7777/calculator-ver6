@@ -11,7 +11,7 @@ document.getElementById("calculateButton").addEventListener("click", function() 
     const targetMonthlyDividend = parseFloat(document.getElementById("targetMonthlyDividend").value) * 10000;
 
     let results = [];
-    let totalInvestment = initialInvestment / Math.pow(1 + inflationRate, 0);  // 첫해 투자금 (둘째 해 부터 인플레이션 반영)
+    let totalInvestment = initialInvestment / Math.pow(1 + inflationRate, year - 1);  // 첫해 투자금 (둘째 해 부터 인플레이션 반영)
     let totalDividends = 0;
     let accumulatedDividends = 0;
     let totalAssets = initialInvestment;  // 초기 자산 설정
