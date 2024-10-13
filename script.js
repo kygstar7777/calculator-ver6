@@ -38,7 +38,7 @@ document.getElementById("calculateButton").addEventListener("click", function() 
         const inflationAdjustedDividend = adjustedDividend / Math.pow(1 + inflationRate, year - 1);
         
        // 총 자산 계산 (이전 해 자산을 포함하여 주가 상승률을 누적 적용)
-        totalAssets = (totalAssets + adjustedDividend + currentMonthlyInvestment * 12) * (1 + stockGrowthRate);
+        totalAssets = (totalAssets + inflationAdjustedDividend + currentMonthlyInvestment * 12) * (1 + stockGrowthRate);
         
         // 결과 저장
         results.push({
