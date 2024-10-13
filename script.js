@@ -18,8 +18,10 @@ document.getElementById("calculateButton").addEventListener("click", function() 
 
     for (let year = 1; year <= 100; year++) {
         // 월 투자금 계산 (인플레이션 반영)
-        const currentMonthlyInvestment = year === 1 ? monthlyInvestment : monthlyInvestment * Math.pow(1 + monthlyInvestmentGrowthRate, year - 1);
-        
+        const currentMonthlyInvestment = year === 1 
+            ? monthlyInvestment 
+            : monthlyInvestment * Math.pow(1 + monthlyInvestmentGrowthRate, year - 1) / Math.pow(1 + inflationRate, year - 1);
+
         // 연 투자금 계산
         let annualInvestment;
         if (year === 1) {
