@@ -11,17 +11,15 @@ document.getElementById("calculateButton").addEventListener("click", function() 
     const targetMonthlyDividend = parseFloat(document.getElementById("targetMonthlyDividend").value) * 10000;
 
     let results = [];
-    let totalInvestment = initialInvestment;  // 첫해 투자금 (둘째 해 부터 인플레이션 반영)
+    let totalInvestment = initialInvestment;  // 첫해 투자금
     let totalDividends = 0;
     let accumulatedDividends = 0;
     let totalAssets = initialInvestment;  // 초기 자산 설정
 
     for (let year = 1; year <= 100; year++) {
-        // 월 투자금 계산 (인플레이션 반영)
-        const currentMonthlyInvestment = year === 1 
-            ? monthlyInvestment 
-            : monthlyInvestment * Math.pow(1 + monthlyInvestmentGrowthRate, year - 1) / Math.pow(1 + inflationRate, year - 1);
-
+        // 월 투자금 계산
+        const currentMonthlyInvestment = year === 1 ? monthlyInvestment : monthlyInvestment * Math.pow(1 + monthlyInvestmentGrowthRate, year - 1);
+        
         // 연 투자금 계산
         let annualInvestment;
         if (year === 1) {
@@ -35,26 +33,23 @@ document.getElementById("calculateButton").addEventListener("click", function() 
         
         // 배당 성장률 반영
         const adjustedDividend = annualDividend * Math.pow(1 + dividendGrowthRate, year - 1);
-
-        // 인플레이션 반영
-        const inflationAdjustedDividend = adjustedDividend / Math.pow(1 + inflationRate, year - 1);
         
        // 총 자산 계산 (이전 해 자산을 포함하여 주가 상승률을 누적 적용)
-        totalAssets = (totalAssets + adjustedDividend + currentMonthlyInvestment * 12) * (1 + stockGrowthRate) / Math.pow(1 + inflationRate, year - 1);
+        totalAssets = (totalAssets + adjustedDividend + currentMonthlyInvestment * 12) * (1 + stockGrowthRate);
         
         // 결과 저장
         results.push({
             year: year,
-            annualDividend: inflationAdjustedDividend,
-            monthlyDividend: inflationAdjustedDividend / 12,
+            annualDividend: adjustedDividend,
+            monthlyDividend: adjustedDividend / 12,
             totalAssets: totalAssets,
             totalInvestment: totalInvestment + currentMonthlyInvestment * 12,
-            totalDividends: accumulatedDividends + inflationAdjustedDividend
+            totalDividends: accumulatedDividends + adjustedDividend
         });
 
         // 투자금 업데이트
         totalInvestment += currentMonthlyInvestment * 12;
-        accumulatedDividends += inflationAdjustedDividend; // 배당금 누적
+        accumulatedDividends += adjustedDividend; // 배당금 누적
     }
 
     // 목표 월 배당금 달성 연도 계산
