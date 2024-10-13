@@ -33,8 +33,8 @@ document.getElementById("calculateButton").addEventListener("click", function() 
         // 배당 성장률 반영
         const adjustedDividend = annualDividend * Math.pow(1 + dividendGrowthRate, year - 1);
         
-        // 총 자산 계산
-        const totalAssets = (annualInvestment + adjustedDividend) * (1 + stockGrowthRate);
+       // 총 자산 계산 (이전 해 자산을 포함하여 주가 상승률을 누적 적용)
+        totalAssets = (totalAssets + adjustedDividend + currentMonthlyInvestment * 12) * (1 + stockGrowthRate);
         
         // 결과 저장
         results.push({
