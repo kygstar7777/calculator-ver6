@@ -14,6 +14,7 @@ document.getElementById("calculateButton").addEventListener("click", function() 
     let totalInvestment = initialInvestment;  // 첫해 투자금
     let totalDividends = 0;
     let accumulatedDividends = 0;
+    let totalAssets = initialInvestment;  // 초기 자산 설정
 
     for (let year = 1; year <= 100; year++) {
         // 월 투자금 계산
