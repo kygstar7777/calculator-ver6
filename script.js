@@ -29,7 +29,7 @@ document.getElementById("calculateButton").addEventListener("click", function() 
         }
 
         // 연 배당금 계산
-        const annualDividend = (annualInvestment * dividendRate) * reinvestmentRate * (1 - taxRate) * (1 - inflationRate);
+        const annualDividend = (annualInvestment * dividendRate) * reinvestmentRate * (1 - taxRate);
         
         // 배당 성장률 반영
         const adjustedDividend = annualDividend * Math.pow(1 + dividendGrowthRate, year - 1);
