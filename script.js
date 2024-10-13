@@ -11,14 +11,14 @@ document.getElementById("calculateButton").addEventListener("click", function() 
     const targetMonthlyDividend = parseFloat(document.getElementById("targetMonthlyDividend").value) * 10000;
 
     let results = [];
-    let totalInvestment = initialInvestment / Math.pow(1 + inflationRate, year - 1);  // 첫해 투자금 (둘째 해 부터 인플레이션 반영)
+    let totalInvestment = initialInvestment;  // 첫해 투자금 (둘째 해 부터 인플레이션 반영)
     let totalDividends = 0;
     let accumulatedDividends = 0;
     let totalAssets = initialInvestment;  // 초기 자산 설정
 
     for (let year = 1; year <= 100; year++) {
         // 월 투자금 계산 (인플레이션 반영)
-        const currentMonthlyInvestment = year === 1 ? monthlyInvestment : monthlyInvestment * Math.pow(1 + monthlyInvestmentGrowthRate, year - 1) / Math.pow(1 + inflationRate, year - 1);
+        const currentMonthlyInvestment = year === 1 ? monthlyInvestment : monthlyInvestment * Math.pow(1 + monthlyInvestmentGrowthRate, year - 1);
         
         // 연 투자금 계산
         let annualInvestment;
@@ -43,7 +43,7 @@ document.getElementById("calculateButton").addEventListener("click", function() 
             annualDividend: adjustedDividend,
             monthlyDividend: adjustedDividend / 12,
             totalAssets: totalAssets,
-            totalInvestment: totalInvestment + currentMonthlyInvestment * 12,
+            totalInvestment: (totalInvestment + currentMonthlyInvestment * 12) / Math.pow(1 + inflationRate, year - 1),
             totalDividends: accumulatedDividends + adjustedDividend
         });
 
