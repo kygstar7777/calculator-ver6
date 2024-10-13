@@ -33,6 +33,9 @@ document.getElementById("calculateButton").addEventListener("click", function() 
         
         // 배당 성장률 반영
         const adjustedDividend = annualDividend * Math.pow(1 + dividendGrowthRate, year - 1);
+
+        // 인플레이션 반영
+        const inflationAdjustedDividend = adjustedDividend / Math.pow(1 + inflationRate, year - 1);
         
        // 총 자산 계산 (이전 해 자산을 포함하여 주가 상승률을 누적 적용)
         totalAssets = (totalAssets + adjustedDividend + currentMonthlyInvestment * 12) * (1 + stockGrowthRate);
@@ -40,16 +43,16 @@ document.getElementById("calculateButton").addEventListener("click", function() 
         // 결과 저장
         results.push({
             year: year,
-            annualDividend: adjustedDividend,
-            monthlyDividend: adjustedDividend / 12,
+            annualDividend: inflationAdjustedDividend,
+            monthlyDividend: inflationAdjustedDividend / 12,
             totalAssets: totalAssets,
             totalInvestment: totalInvestment + currentMonthlyInvestment * 12,
-            totalDividends: accumulatedDividends + adjustedDividend
+            totalDividends: accumulatedDividends + inflationAdjustedDividend
         });
 
         // 투자금 업데이트
         totalInvestment += currentMonthlyInvestment * 12;
-        accumulatedDividends += adjustedDividend; // 배당금 누적
+        accumulatedDividends += inflationAdjustedDividend; // 배당금 누적
     }
 
     // 목표 월 배당금 달성 연도 계산
