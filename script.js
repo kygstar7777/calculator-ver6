@@ -43,7 +43,7 @@ document.getElementById("calculateButton").addEventListener("click", function() 
             annualDividend: adjustedDividend,
             monthlyDividend: adjustedDividend / 12,
             totalAssets: totalAssets,
-            totalInvestment: (totalInvestment + currentMonthlyInvestment * 12) / Math.pow(1 + inflationRate, year - 1),
+            totalInvestment: totalInvestment + currentMonthlyInvestment * 12,
             totalDividends: accumulatedDividends + adjustedDividend
         });
 
